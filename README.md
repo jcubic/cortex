@@ -1,4 +1,4 @@
-# neocortex
+# NeoCortex
 
 ![neocortex: Modern JavaScript interpreter and stepper](https://raw.githubusercontent.com/jcubic/neocortex/refs/heads/master/assets/logo.svg)
 
