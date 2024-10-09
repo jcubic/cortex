@@ -1,6 +1,6 @@
 # neocortex
 
-A sandboxed JavaScript interpreter in JavaScript.  Execute arbitrary ES5
+A sandboxed JavaScript interpreter in JavaScript. Execute arbitrary
 JavaScript code line by line in isolation and safety.
 
 This project is a fork of [JS-Interpreter](https://github.com/NeilFraser/JS-Interpreter),
