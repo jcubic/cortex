@@ -3,6 +3,7 @@
 ![neocortex: Modern JavaScript interpreter and stepper](https://raw.githubusercontent.com/jcubic/neocortex/refs/heads/master/assets/logo.svg)
 
 [![Coverage Status](https://coveralls.io/repos/github/jcubic/neocortex/badge.svg?branch=master)](https://coveralls.io/github/jcubic/neocortex?branch=master)
+[![LICENSE Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/jcubic/neocortex/blob/master/LICENSE)
 
 A sandboxed JavaScript interpreter in JavaScript. Execute arbitrary
 JavaScript code line by line in isolation and safety.
