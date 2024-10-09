@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "readme": "HASH=$(git rev-parse --short HEAD) && sed -i 's/\\(branch=master\\)[^)]*/\\1\\&nocache='\"$HASH\"'/' README.md"
   },
   "keywords": [],
   "author": "Jakub T. Jankiewicz <jcubic@onet.pl> (https://jcubic.pl/me/)",
