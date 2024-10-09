@@ -1,0 +1,9 @@
+{
+  "name": "@jcubic/js-interpreter",
+  "version": "0.0.1",
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "Jakub T. Jankiewicz <jcubic@onet.pl> (https://jcubic.pl/me/)",
+  "license": "Apache-2.0"
+}
