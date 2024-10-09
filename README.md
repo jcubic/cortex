@@ -1,6 +1,6 @@
 # neocortex
 
-![neocortex: Modern JavaScript interpreter and stepper](https://raw.githubusercontent.com/jcubic/neocortex/master/assets/logo.svg)
+![neocortex: Modern JavaScript interpreter and stepper](https://raw.githubusercontent.com/jcubic/neocortex/refs/heads/master/assets/logo.svg)
 
 A sandboxed JavaScript interpreter in JavaScript. Execute arbitrary
 JavaScript code line by line in isolation and safety.
