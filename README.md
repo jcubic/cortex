@@ -11,7 +11,7 @@ with aim to be a
 
 ## Acknowledge
 ### Logo
-* Illustration by [VectorPortal](https://www.vectorportal.com]; licensed with [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+* Illustration by [VectorPortal](https://www.vectorportal.com); licensed with [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 * [Airstrip Four](https://www.dafont.com/airstrip-four.font) Font by [Vic Fieger](https://www.dafont.com/vic-fieger.d852)
 
 ## License
