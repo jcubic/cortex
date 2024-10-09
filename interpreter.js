@@ -4869,3 +4869,5 @@ Interpreter.prototype['getStateStack'] = Interpreter.prototype.getStateStack;
 Interpreter.prototype['setStateStack'] = Interpreter.prototype.setStateStack;
 Interpreter['VALUE_IN_DESCRIPTOR'] = Interpreter.VALUE_IN_DESCRIPTOR;
 Interpreter['Status'] = Interpreter.Status;
+
+export default Interpreter;

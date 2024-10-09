@@ -1,9 +1,15 @@
 {
-  "name": "@jcubic/js-interpreter",
+  "name": "@jcubic/neocortex",
   "version": "0.0.1",
+  "type": "module",
   "scripts": {
+    "test": "vitest"
   },
   "keywords": [],
   "author": "Jakub T. Jankiewicz <jcubic@onet.pl> (https://jcubic.pl/me/)",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "acorn": "^8.12.1",
+    "vitest": "^2.1.2"
+  }
 }
