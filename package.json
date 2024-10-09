@@ -3,13 +3,17 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": "Jakub T. Jankiewicz <jcubic@onet.pl> (https://jcubic.pl/me/)",
   "license": "Apache-2.0",
   "devDependencies": {
+    "@vitest/coverage-istanbul": "^2.1.2",
+    "@vitest/coverage-v8": "^2.1.2",
     "acorn": "^8.12.1",
+    "coveralls-next": "^4.2.1",
     "vitest": "^2.1.2"
   }
 }
