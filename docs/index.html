@@ -4,16 +4,10 @@
   <meta charset="utf-8">
   <title>neocortex Demo</title>
   <link href="style.css" rel="stylesheet" type="text/css">
+  <srcipt src="https://cdn.jsdelivr.net/gh/jcubic/neocortex/acorn.js"></script>
+  <srcipt src="https://cdn.jsdelivr.net/gh/jcubic/neocortex/interpreter.js"></script>
 
   <script>
-    // Depending on the URL argument, load the compressed or uncompressed version.
-    var compressed = (document.location.search === '?compressed');
-    if (compressed) {
-      document.write('<scr'+'ipt src="acorn_interpreter.js"></scr'+'ipt>');
-    } else {
-      document.write('<scr'+'ipt src="acorn.js"></scr'+'ipt>');
-      document.write('<scr'+'ipt src="interpreter.js"></scr'+'ipt>');
-    }
 
     var myInterpreter;
     function initAlert(interpreter, globalObject) {
