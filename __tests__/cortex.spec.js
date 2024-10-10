@@ -28,6 +28,18 @@ Interpreter.nativeGlobal.acorn = acorn;
     });
 }
 
+test('it should append code', () => {
+    const fn = vi.fn();
+    const code = `alert(1);`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.appendCode('alert(2);');
+    inter.run();
+    expect(fn.mock.calls).toEqual([[1], [2]]);
+});
+
 test('it should create external function', () => {
     const fn = vi.fn();
     const args = ['hello', 'world'];
@@ -136,17 +148,5 @@ test('it should check if value is not an arrray', () => {
         inter.run();
         expect(fn.mock.calls[0]).toEqual([false]);
     });
-});
-
-test('it should append code', () => {
-    const fn = vi.fn();
-    const code = `alert(1);`;
-    const inter = new Interpreter(code, (interpreter, globalObject) => {
-        const native_fn = interpreter.createNativeFunction(fn);
-        interpreter.setProperty(globalObject, 'alert', native_fn);
-    });
-    inter.appendCode('alert(2);');
-    inter.run();
-    expect(fn.mock.calls).toEqual([[1], [2]]);
 });
 
