@@ -150,3 +150,98 @@ test('it should check if value is not an arrray', () => {
     });
 });
 
+test('it should create object property', () => {
+    const fn = vi.fn();
+    const code = `var foo = {};
+                  Object.defineProperty(foo, 'bar', { value: 20 });
+                  alert(foo.bar)`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(fn.mock.calls[0]).toEqual([20]);
+});
+
+test('it should create object property', () => {
+    const fn = vi.fn();
+    const code = 'var foo = {}; Object.defineProperty(foo, "bar", { value: 20 }); alert(foo.bar)';
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(fn.mock.calls[0]).toEqual([20]);
+});
+
+test('it should mutate object property', () => {
+    const fn = vi.fn();
+    const code = `var foo = {};
+                  Object.defineProperty(foo, "bar", { value: 20, writable: true });
+                  foo.bar = 30;
+                  alert(foo.bar)`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(fn.mock.calls[0]).toEqual([30]);
+});
+
+
+test('it should not allow mutating of property', () => {
+    const fn = vi.fn();
+    const code = `var foo = {};
+                  Object.defineProperty(foo, "bar", { value: 20 });
+                  foo.bar = 30;
+                  alert(foo.bar)`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(fn.mock.calls[0]).toEqual([20]);
+});
+
+test('it should create enumerable property', () => {
+    const fn = vi.fn();
+    const code = `var foo = {};
+                  Object.defineProperty(foo, "bar", { value: 20, enumerable: true });
+                  alert(Object.keys(foo))`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(Object.values(fn.mock.calls[0][0].properties)).toEqual(['bar']);
+});
+
+test('it should allow to reconfigure a property', () => {
+    const fn = vi.fn();
+    const code = `var foo = {};
+                  Object.defineProperty(foo, "bar", { value: 20, configurable: true });
+                  Object.defineProperty(foo, "bar", { value: 30, enumerable: true });
+                  var values = Object.keys(foo).map(function(e) {
+                    return foo[e];
+                  });
+                  alert(values)`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(Object.values(fn.mock.calls[0][0].properties)).toEqual([30]);
+});
+
+test('it should create non configurable property', () => {
+    const fn = vi.fn();
+    const code = `var foo = {};
+                  Object.defineProperty(foo, "bar", { value: 20 });
+                  Object.defineProperty(foo, "bar", { value: 30 });
+                  alert(Object.values(foo))`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    expect(() => inter.run()).toThrow(/redefine/);
+});
