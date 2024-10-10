@@ -218,6 +218,15 @@ test('it should create object with prototype null', () => {
     expect(() => inter.run()).toThrow(/toString/);
 });
 
+test('it should create object with Object constructor', () => {
+    ['Object()', 'new Object()'].forEach(obj => {
+        const code = `var obj = ${obj}; obj.foo = 'lorem'; obj;`
+        const inter = new Interpreter(code);
+        inter.run();
+        expect(inter.pseudoToNative(inter.value)).toEqual({foo: 'lorem'});
+    });
+});
+
 test('it should throw when using Object.create with invalid value', () => {
     const fn = vi.fn();
     const code = `var x = Object.create("hello");`;
