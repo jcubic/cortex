@@ -238,7 +238,7 @@ test('it should box primitive value when using Object constructor', () => {
     expect(fn.mock.calls[0]).toEqual([12]);
 });
 
-test.only('it should convert boxed Object into native value', () => {
+test('it should convert boxed Object into native value', () => {
     const code = `var obj = Object(10); obj`;
     const inter = new Interpreter(code);
     inter.run();
