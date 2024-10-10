@@ -184,6 +184,15 @@ test('it should return object fields and methods', () => {
     expect(inter.pseudoToNative(fn.mock.calls[0][0])).toEqual(['bar', 'getValue']);
 });
 
+test('it should throw when getting own Properties on invalid value', () => {
+    ['undefined', 'null'].forEach(value => {
+        const code = `var value = ${value};
+                      Object.getOwnPropertyNames(value)`;
+        const inter = new Interpreter(code);
+        expect(() => inter.run()).toThrow(/convert/);
+    });
+});
+
 test('it should create object with prototype using Object.create', () => {
     const fn = vi.fn();
     const code = `var x = Object.create(Object);
