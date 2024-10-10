@@ -72,13 +72,44 @@ test('it should create and evaluate async task', async () => {
 
 test('it should create and interate over array', () => {
     const fn = vi.fn();
-    const code = `var x = [1,2,3]; for (var i in x) { alert(i, x[i]); }`;
+    const code = 'var x = [1,2,3]; for (var i in x) { alert(i, x[i]); }';
     const inter = new Interpreter(code, (interpreter, globalObject) => {
         const native_fn = interpreter.createNativeFunction(fn);
         interpreter.setProperty(globalObject, 'alert', native_fn);
     });
     inter.run();
     expect(fn.mock.calls).toEqual([['0', 1], ['1', 2], ['2', 3]]);
+});
+
+test('it should create array using Array function', () => {
+    ['Array(1,2,3)', 'new Array(1,2,3)'].forEach(arr => {
+        const fn = vi.fn();
+        const code = `var x = ${arr}; for (var i in x) { alert(i, x[i]); }`;
+        const inter = new Interpreter(code, (interpreter, globalObject) => {
+            const native_fn = interpreter.createNativeFunction(fn);
+            interpreter.setProperty(globalObject, 'alert', native_fn);
+        });
+        inter.run();
+        expect(fn.mock.calls).toEqual([['0', 1], ['1', 2], ['2', 3]]);
+    });
+});
+
+test('it should create array using Array function with given length', () => {
+    const fn = vi.fn();
+    const len = 10;
+    const code = `var arr = Array(${len}); alert(arr.length);`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(fn.mock.calls[0]).toEqual([len]);
+});
+
+test('it not should create array using Array function with invalid length', () => {
+    const code = `var arr = Array(-1);`;
+    const inter = new Interpreter(code);
+    expect(() => inter.run()).toThrowError('-1');
 });
 
 test('it should append code', () => {
