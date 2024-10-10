@@ -163,6 +163,62 @@ test('it should convert internal array to native array', () => {
     });
 });
 
+test('it should return object fields and methods', () => {
+    const fn = vi.fn();
+    const code = `function Foo(bar) {
+                    this.bar = bar;
+                    this.getValue = function() {
+                      return this.bar.toUpperCase();
+                    };
+                  }
+                  Foo.prototype.getBar = function() {
+                     return this.bar;
+                  };
+                  var foo = new Foo();
+                  alert(Object.getOwnPropertyNames(foo));`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(inter.pseudoToNative(fn.mock.calls[0][0])).toEqual(['bar', 'getValue']);
+});
+
+test('it should create object with prototype using Object.create', () => {
+    const fn = vi.fn();
+    const code = `var x = Object.create(Object);
+                  alert(x);
+                  alert(x.toString());`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(inter.pseudoToNative(fn.mock.calls[0][0])).toEqual({});
+    expect(fn.mock.calls[1][0]).toEqual('[object Object]');
+});
+
+test('it should create object with prototype null', () => {
+    const fn = vi.fn();
+    const code = `var x = Object.create(null);
+                  alert(x.toString());`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    expect(() => inter.run()).toThrow(/toString/);
+});
+
+test('it should throw when using Object.create with invalid value', () => {
+    const fn = vi.fn();
+    const code = `var x = Object.create("hello");`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    expect(() => inter.run()).toThrow(/Object or null/);
+});
+
 test('it should create object property', () => {
     const fn = vi.fn();
     const code = `var foo = {};
