@@ -112,6 +112,32 @@ test('it not should create array using Array function with invalid length', () =
     expect(() => inter.run()).toThrowError('-1');
 });
 
+test('it should check if value is an arrray', () => {
+    ['Array(1,2,3)', 'new Array(1,2,3)', '[1,2,3]'].forEach(arr => {
+        const fn = vi.fn();
+        const code = `var arr = ${arr}; alert(Array.isArray(arr));`;
+        const inter = new Interpreter(code, (interpreter, globalObject) => {
+            const native_fn = interpreter.createNativeFunction(fn);
+            interpreter.setProperty(globalObject, 'alert', native_fn);
+        });
+        inter.run();
+        expect(fn.mock.calls[0]).toEqual([true]);
+    });
+});
+
+test('it should check if value is not an arrray', () => {
+    ['true', 'false', '10', '"hello"', '0.1'].forEach(value => {
+        const fn = vi.fn();
+        const code = `var value = ${value}; alert(Array.isArray(value));`;
+        const inter = new Interpreter(code, (interpreter, globalObject) => {
+            const native_fn = interpreter.createNativeFunction(fn);
+            interpreter.setProperty(globalObject, 'alert', native_fn);
+        });
+        inter.run();
+        expect(fn.mock.calls[0]).toEqual([false]);
+    });
+});
+
 test('it should append code', () => {
     const fn = vi.fn();
     const code = `alert(1);`;
