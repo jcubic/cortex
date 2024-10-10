@@ -220,11 +220,30 @@ test('it should create object with prototype null', () => {
 
 test('it should create object with Object constructor', () => {
     ['Object()', 'new Object()'].forEach(obj => {
-        const code = `var obj = ${obj}; obj.foo = 'lorem'; obj;`
+        const code = `var obj = ${obj}; obj.foo = 'lorem'; obj;`;
         const inter = new Interpreter(code);
         inter.run();
         expect(inter.pseudoToNative(inter.value)).toEqual({foo: 'lorem'});
     });
+});
+
+test('it should box primitive value when using Object constructor', () => {
+    const fn = vi.fn();
+    const code = `var obj = Object(10); alert(obj + 2);`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(fn.mock.calls[0]).toEqual([12]);
+});
+
+test.only('it should convert boxed Object into native value', () => {
+    const code = `var obj = Object(10); obj`;
+    const inter = new Interpreter(code);
+    inter.run();
+    console.log(inter.value);
+    expect(inter.pseudoToNative(inter.value)).toEqual(new Number(10));
 });
 
 test('it should throw when using Object.create with invalid value', () => {

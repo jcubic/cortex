@@ -2,7 +2,7 @@
 
 ![Cortex: Modern JavaScript interpreter and stepper](https://raw.githubusercontent.com/jcubic/cortex/refs/heads/master/assets/logo.svg)
 
-[![Coverage Status](https://coveralls.io/repos/github/jcubic/cortex/badge.svg?branch=master&nocache=90bd432)](https://coveralls.io/github/jcubic/cortex?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/jcubic/cortex/badge.svg?branch=master&nocache=ea7e9ab)](https://coveralls.io/github/jcubic/cortex?branch=master)
 [![LICENSE Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/jcubic/cortex/blob/master/LICENSE)
 
 A sandboxed JavaScript interpreter in JavaScript. Execute arbitrary
