@@ -2684,6 +2684,14 @@ Interpreter.prototype.pseudoToNative = function(pseudoObj, opt_cycles) {
     throw Error('Object is not pseudo');
   }
 
+  if ((pseudoObj.proto === this.NUMBER.properties['prototype'] ||
+       pseudoObj.proto === this.BOOLEAN.properties['prototype'] ||
+       pseudoObj.proto === this.STRING.properties['prototype']) &&
+      (pseudoObj.data === true || pseudoObj.data === false ||
+       typeof pseudoObj.data === 'string' || typeof pseudoObj.data === 'number')) {
+      return Object(pseudoObj.data);
+  }
+
   // Look up if this object has already been converted.
   var cycles = opt_cycles || {
     pseudo: [],
