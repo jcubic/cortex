@@ -70,9 +70,19 @@ test('it should create and evaluate async task', async () => {
     expect(fn.mock.calls[0]).toEqual(['hello']);
 });
 
+test('it should create and interate over array', () => {
+    const fn = vi.fn();
+    const code = `var x = [1,2,3]; for (var i in x) { alert(i, x[i]); }`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(fn.mock.calls).toEqual([['0', 1], ['1', 2], ['2', 3]]);
+});
+
 test('it should append code', () => {
     const fn = vi.fn();
-    const args = ['hello', 'world'];
     const code = `alert(1);`;
     const inter = new Interpreter(code, (interpreter, globalObject) => {
         const native_fn = interpreter.createNativeFunction(fn);
@@ -82,3 +92,4 @@ test('it should append code', () => {
     inter.run();
     expect(fn.mock.calls).toEqual([[1], [2]]);
 });
+
