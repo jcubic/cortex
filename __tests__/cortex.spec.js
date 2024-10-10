@@ -150,6 +150,19 @@ test('it should check if value is not an arrray', () => {
     });
 });
 
+test('it should convert internal array to native array', () => {
+    ['Array(1,2,3)', 'new Array(1,2,3)', '[1,2,3]'].forEach(arr => {
+        const fn = vi.fn();
+        const code = `var arr = ${arr}; alert(arr);`;
+        const inter = new Interpreter(code, (interpreter, globalObject) => {
+            const native_fn = interpreter.createNativeFunction(fn);
+            interpreter.setProperty(globalObject, 'alert', native_fn);
+        });
+        inter.run();
+        expect(inter.pseudoToNative(fn.mock.calls[0][0])).toEqual([1,2,3]);
+    });
+});
+
 test('it should create object property', () => {
     const fn = vi.fn();
     const code = `var foo = {};
