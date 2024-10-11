@@ -424,8 +424,17 @@ test('it should create non configurable property', () => {
 });
 
 // -----------------------------------------------------------------------------
-// :: Regex timeout
+// :: Regex match
 // -----------------------------------------------------------------------------
+test('it should run longer regex', () => {
+    const re = /(a+)+$/;
+    const str = 'a'.repeat(10) + 'b';
+    const code = `var re = /${re.source}/; "${str}".match(re);`;
+    const inter = new Interpreter(code);
+    inter.run();
+    expect(inter.pseudoToNative(inter.value)).toEqual(str.match(re));
+});
+
 test('it should cancel regex processing', () => {
     // example regex run for about 1.5 seconds
     const re = /(a+)+$/;
@@ -436,3 +445,5 @@ test('it should cancel regex processing', () => {
     });
     expect(() => inter.run()).toThrow(/Timeout/);
 });
+
+
