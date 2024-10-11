@@ -446,4 +446,23 @@ test('it should cancel regex processing', () => {
     expect(() => inter.run()).toThrow(/Timeout/);
 });
 
+// -----------------------------------------------------------------------------
+// :: exception
+// -----------------------------------------------------------------------------
+test('it should throw exception', () => {
+    const code = `throw new Error('Nasty');`;
+    const inter = new Interpreter(code);
+    expect(() => inter.run()).toThrow(/Nasty/);
+});
 
+test('it should catch exception', () => {
+    const fn = vi.fn();
+    const message = 'Nasty';
+    const code = `try { throw new Error('${message}'); } catch(e) { alert(e.message); }`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    inter.run();
+    expect(fn.mock.calls[0]).toEqual([message]);
+});
