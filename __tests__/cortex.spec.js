@@ -7,6 +7,9 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 Interpreter.nativeGlobal.acorn = acorn;
 
+// -----------------------------------------------------------------------------
+// :: Simple exec
+// -----------------------------------------------------------------------------
 {
     const code = 'var a=1; for(var i=1;i<10;i++) { a*=i; } a;';
 
@@ -28,6 +31,9 @@ Interpreter.nativeGlobal.acorn = acorn;
     });
 }
 
+// -----------------------------------------------------------------------------
+// :: appendCode
+// -----------------------------------------------------------------------------
 test('it should append code', () => {
     const fn = vi.fn();
     const code = `alert(1);`;
@@ -40,6 +46,9 @@ test('it should append code', () => {
     expect(fn.mock.calls).toEqual([[1], [2]]);
 });
 
+// -----------------------------------------------------------------------------
+// :: External API
+// -----------------------------------------------------------------------------
 test('it should create external function', () => {
     const fn = vi.fn();
     const args = ['hello', 'world'];
@@ -51,6 +60,7 @@ test('it should create external function', () => {
     inter.run();
     expect(fn.mock.calls[0]).toEqual(['hello', 'world']);
 });
+
 
 test('it should create object and method', () => {
     const fn = vi.fn();
@@ -65,6 +75,9 @@ test('it should create object and method', () => {
     expect(fn.mock.calls[0]).toEqual(['hello, world!']);
 });
 
+// -----------------------------------------------------------------------------
+// :: Async task
+// -----------------------------------------------------------------------------
 test('it should create and evaluate async task', async () => {
     const code = 'setTimeout(function() { alert("hello"); }, 0)';
     const fn = vi.fn();
@@ -82,6 +95,9 @@ test('it should create and evaluate async task', async () => {
     expect(fn.mock.calls[0]).toEqual(['hello']);
 });
 
+// -----------------------------------------------------------------------------
+// :: Arrays
+// -----------------------------------------------------------------------------
 test('it should create and interate over array', () => {
     const fn = vi.fn();
     const code = 'var x = [1,2,3]; for (var i in x) { alert(i, x[i]); }';
@@ -163,6 +179,9 @@ test('it should convert internal array to native array', () => {
     });
 });
 
+// -----------------------------------------------------------------------------
+// :: Object.getOwnPropertyNames
+// -----------------------------------------------------------------------------
 test('it should return object fields and methods', () => {
     const fn = vi.fn();
     const code = `function Foo(bar) {
@@ -193,6 +212,9 @@ test('it should throw when getting own Properties on invalid value', () => {
     });
 });
 
+// -----------------------------------------------------------------------------
+// :: Object.create
+// -----------------------------------------------------------------------------
 test('it should create object with prototype using Object.create', () => {
     const fn = vi.fn();
     const code = `var x = Object.create(Object);
@@ -238,6 +260,19 @@ test('it should box primitive value when using Object constructor', () => {
     expect(fn.mock.calls[0]).toEqual([12]);
 });
 
+test('it should throw when using Object.create with invalid value', () => {
+    const fn = vi.fn();
+    const code = `var x = Object.create("hello");`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        const native_fn = interpreter.createNativeFunction(fn);
+        interpreter.setProperty(globalObject, 'alert', native_fn);
+    });
+    expect(() => inter.run()).toThrow(/Object or null/);
+});
+
+// -----------------------------------------------------------------------------
+// :: pseudoToNative
+// -----------------------------------------------------------------------------
 test('it should convert boxed Object into native value', () => {
     const code = `var obj = Object(10); obj`;
     const inter = new Interpreter(code);
@@ -250,7 +285,6 @@ test('it should convert RegExp to native value', () => {
         const code = `var obj = ${re}; obj`;
         const inter = new Interpreter(code);
         inter.run();
-        console.log(inter.value);
         expect(inter.pseudoToNative(inter.value)).toEqual(/foo/);
     });
 });
@@ -259,20 +293,40 @@ test('it should convert Date object to native value', () => {
     const code = `var obj = new Date('2024'); obj`;
     const inter = new Interpreter(code);
     inter.run();
-    console.log(inter.value);
-    expect(inter.pseudoToNative(inter.value)).toEqual(new Date('2024'));
+    const cache = {
+        pseudo: [],
+        native: []
+    };
+    expect(inter.pseudoToNative(inter.value, cache)).toEqual(new Date('2024'));
+    expect(inter.pseudoToNative(inter.value, cache)).toEqual(new Date('2024'));
 });
 
-test('it should throw when using Object.create with invalid value', () => {
-    const fn = vi.fn();
-    const code = `var x = Object.create("hello");`;
-    const inter = new Interpreter(code, (interpreter, globalObject) => {
-        const native_fn = interpreter.createNativeFunction(fn);
-        interpreter.setProperty(globalObject, 'alert', native_fn);
+test('it should use cache when converting object to native', () => {
+    const code = `var obj = Object(10); obj`;
+    const result = Object(10);
+    const inter = new Interpreter(code);
+    inter.run();
+    const cache = {
+        pseudo: [],
+        native: []
+    };
+    expect(inter.pseudoToNative(inter.value, cache)).toEqual(result);
+    expect(inter.pseudoToNative(inter.value, cache)).toEqual(result);
+    expect(cache).toEqual({
+        pseudo: [inter.value],
+        native: [result]
     });
-    expect(() => inter.run()).toThrow(/Object or null/);
 });
 
+test('it should throw when trying to convert non pseudo', () => {
+    const noop = ``;
+    const inter = new Interpreter(noop);
+    expect(() => inter.pseudoToNative(Object())).toThrow(/pseudo/);
+});
+
+// -----------------------------------------------------------------------------
+// :: Object.defineProperty
+// -----------------------------------------------------------------------------
 test('it should create object property', () => {
     const fn = vi.fn();
     const code = `var foo = {};
