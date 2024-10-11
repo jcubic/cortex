@@ -2700,7 +2700,9 @@ Interpreter.prototype.pseudoToNative = function(pseudoObj, opt_cycles) {
        pseudoObj.proto === this.STRING.properties['prototype']) &&
       (pseudoObj.data === true || pseudoObj.data === false ||
        typeof pseudoObj.data === 'string' || typeof pseudoObj.data === 'number')) {
-      return Object(pseudoObj.data);
+      var nativeBox = Object(pseudoObj.data);
+      cycles.native.push(nativeBox);
+      return nativeBox;
   }
 
   if (this.isa(pseudoObj, this.REGEXP)) {  // Regular expression.
