@@ -458,9 +458,11 @@ test('it should throw exception', () => {
 });
 
 test('it should throw subclass exception', () => {
-    const code = `throw new TypeError('Nasty');`;
-    const inter = new Interpreter(code);
-    expect(() => inter.run()).toThrowError(TypeError);
+    ['TypeError("Nasty")', 'new TypeError("Nasty")'].forEach(err => {
+        const code = `throw ${err};`;
+        const inter = new Interpreter(code);
+        expect(() => inter.run()).toThrowError(TypeError);
+    });
 });
 
 test('it should catch exception', () => {
