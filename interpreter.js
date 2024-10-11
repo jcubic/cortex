@@ -2403,7 +2403,6 @@ Interpreter.prototype.vmCall = function(code, sandbox, nativeRegExp, callback) {
     callback(null);
     this.throwException(this.ERROR, 'RegExp Timeout: ' + nativeRegExp);
   }
-  return Interpreter.REGEXP_TIMEOUT;
 };
 
 /**
