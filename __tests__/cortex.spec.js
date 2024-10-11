@@ -422,3 +422,17 @@ test('it should create non configurable property', () => {
     });
     expect(() => inter.run()).toThrow(/redefine/);
 });
+
+// -----------------------------------------------------------------------------
+// :: Regex timeout
+// -----------------------------------------------------------------------------
+test('it should cancel regex processing', () => {
+    // example regex run for about 1.5 seconds
+    const re = /(a+)+$/;
+    const str = 'a'.repeat(24) + 'b';
+    const code = `var re = /${re.source}/; "${str}".match(re);`;
+    const inter = new Interpreter(code, (interpreter, globalObject) => {
+        interpreter['REGEXP_THREAD_TIMEOUT'] = 0;
+    });
+    expect(() => inter.run()).toThrow(/Timeout/);
+});
