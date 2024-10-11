@@ -455,6 +455,12 @@ test('it should throw exception', () => {
     expect(() => inter.run()).toThrow(/Nasty/);
 });
 
+test('it should throw subclass exception', () => {
+    const code = `throw new TypeError('Nasty');`;
+    const inter = new Interpreter(code);
+    expect(() => inter.run()).toThrowError(TypeError);
+});
+
 test('it should catch exception', () => {
     const fn = vi.fn();
     const message = 'Nasty';
@@ -466,3 +472,4 @@ test('it should catch exception', () => {
     inter.run();
     expect(fn.mock.calls[0]).toEqual([message]);
 });
+
