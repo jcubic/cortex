@@ -242,8 +242,25 @@ test('it should convert boxed Object into native value', () => {
     const code = `var obj = Object(10); obj`;
     const inter = new Interpreter(code);
     inter.run();
-    console.log(inter.value);
     expect(inter.pseudoToNative(inter.value)).toEqual(new Number(10));
+});
+
+test('it should convert RegExp to native value', () => {
+    ['new RegExp("foo")', '/foo/'].forEach(re => {
+        const code = `var obj = ${re}; obj`;
+        const inter = new Interpreter(code);
+        inter.run();
+        console.log(inter.value);
+        expect(inter.pseudoToNative(inter.value)).toEqual(/foo/);
+    });
+});
+
+test('it should convert Date object to native value', () => {
+    const code = `var obj = new Date('2024'); obj`;
+    const inter = new Interpreter(code);
+    inter.run();
+    console.log(inter.value);
+    expect(inter.pseudoToNative(inter.value)).toEqual(new Date('2024'));
 });
 
 test('it should throw when using Object.create with invalid value', () => {
