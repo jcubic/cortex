@@ -450,9 +450,11 @@ test('it should cancel regex processing', () => {
 // :: exception
 // -----------------------------------------------------------------------------
 test('it should throw exception', () => {
-    const code = `throw new Error('Nasty');`;
-    const inter = new Interpreter(code);
-    expect(() => inter.run()).toThrow(/Nasty/);
+    ['Error("Nasty")', 'new Error("Nasty")'].forEach(err => {
+        const code = `throw ${err};`;
+        const inter = new Interpreter(code);
+        expect(() => inter.run()).toThrow(/Nasty/);
+    });
 });
 
 test('it should throw subclass exception', () => {
@@ -473,3 +475,11 @@ test('it should catch exception', () => {
     expect(fn.mock.calls[0]).toEqual([message]);
 });
 
+// -----------------------------------------------------------------------------
+// :: TODO
+// -----------------------------------------------------------------------------
+// :: JSON.stringify / initJSON
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// :: JSON.parse / initJSON
+// -----------------------------------------------------------------------------
